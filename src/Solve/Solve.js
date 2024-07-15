@@ -1,8 +1,11 @@
 import { solveList } from "../utils/solveList";
 import { useEffect, useState } from "react";
 import '../assets/styles/Solve.css';
+import axios from "axios";
 
 const Solve = () => {
+  const [data, setData] = useState({})
+
   const [questionList, setQuestionList] = useState([]); // 질문 배열
   const [currentNumber, setCurrentNumber] = useState(0); // 현재 문제 번호
   const [score, setScore] = useState(0); // 맞춘 개수
@@ -43,7 +46,7 @@ const Solve = () => {
   const handleAnswerClick = (idx) => {
     const correct = shuffleAnswerList[idx] === currentQuestion.word;
 
-    setPopupMessage(correct ? '맞다' : '틀리다');
+    setPopupMessage(correct ? '정답입니다!' : '오답입니다!');
     setPopup(true);
 
     if (correct) {
@@ -59,6 +62,47 @@ const Solve = () => {
       }
     }, 800);
   };
+
+
+
+
+
+
+  // github gist
+  // useEffect(() => {
+  //   const fetchGist = async () => {
+  //     try {
+  //       const response = await axios.get(`https://api.github.com/gists/${process.env.REACT_APP_GIST_ID}`);
+  //
+  //       console.log(response ,"RESPONSE")
+  //       // console.log(JSON.parse(response.data.files[process.env.REACT_APP_GIST_WORD].content))
+  //       setData(JSON.parse(response.data.files[process.env.REACT_APP_GIST_WORD].content));
+  //     } catch (error) {
+  //       // 글로벌 에러 세팅
+  //       console.error('Error fetching the Gist:', error);
+  //     }
+  //   };
+  //
+  //   fetchGist();
+  // }, []);
+
+  // github gist
+  useEffect(() => {
+    const fetchGist = async () => {
+      try {
+        const response = await axios.get(`https://api.github.com/gists/${process.env.REACT_APP_GIST_ID}`);
+
+        console.log(response, "RESPONSE")
+
+      } catch (error) {
+        // 글로벌 에러 세팅
+        console.error('Error fetching the Gist:', error);
+      }
+    };
+
+    fetchGist();
+  }, []);
+
 
   return (
     <div className='wrap'>
@@ -77,7 +121,7 @@ const Solve = () => {
             </div>
           ) : (
             <div className='content'>
-              <div>
+              <div className='content_inner'>
                 <div className='numberling'>
                   <span className='current_number'>{currentNumber + 1}</span> / 10
                 </div>
