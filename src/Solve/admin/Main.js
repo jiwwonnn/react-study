@@ -4,6 +4,10 @@ import axios from "axios";
 const Main = () => {
 
   const [data, setData] = useState({})
+  
+  const [edit, setEdit] = useState(false) // 수정 상태
+
+  const [add,setAdd] = useState(false)
 
 
   // github gist
@@ -49,6 +53,17 @@ const Main = () => {
   };
 
 
+  console.log(data, "DATA")
+
+
+  const handleAddList = () => {
+    setAdd(true)
+  }
+
+  const handleClose = () => {
+    setAdd(false)
+  }
+
   return (
     <div>
       <div>
@@ -63,10 +78,33 @@ const Main = () => {
         </ul>
       </div>
 
+      <button onClick={handleAddList}>내용 추가하기</button>
       <ul className='solve_ul'>
         {
+          add &&
+          <li className='solve_li'>
+            <button className='solve_delete' onClick={handleClose}>X</button>
+            <div className='solve_list_inner'>
+              <div>
+                <div className='solve_title'>이미지</div>
+                <input type="text" placeholder='이미지 url' />
+              </div>
+              <div>
+                <div className="solve_title">텍스트</div>
+                <input type="text" placeholder="텍스트" />
+              </div>
+              <div>
+                <div className="solve_title">카테고리</div>
+                <input type="text" placeholder="카테고리" />
+              </div>
+              <button className='solve_edit'>추가하기</button>
+
+            </div>
+          </li>
+        }
+        {
           data.solveList && data.solveList[0].map((item, idx) => (
-            <li className='solve_li'>
+            <li className='solve_li' key={idx}>
               {/*삭제버튼은 21개부터 생김 20개일때는 닫기버튼이 안생겨야함*/}
               <button className='solve_delete'>X</button>
               <div className='solve_list_inner'>
