@@ -69,31 +69,11 @@ const Solve = () => {
 
 
   // github gist
-  // useEffect(() => {
-  //   const fetchGist = async () => {
-  //     try {
-  //       const response = await axios.get(`https://api.github.com/gists/${process.env.REACT_APP_GIST_ID}`);
-  //
-  //       console.log(response ,"RESPONSE")
-  //       // console.log(JSON.parse(response.data.files[process.env.REACT_APP_GIST_WORD].content))
-  //       setData(JSON.parse(response.data.files[process.env.REACT_APP_GIST_WORD].content));
-  //     } catch (error) {
-  //       // 글로벌 에러 세팅
-  //       console.error('Error fetching the Gist:', error);
-  //     }
-  //   };
-  //
-  //   fetchGist();
-  // }, []);
-
-  // github gist
   useEffect(() => {
     const fetchGist = async () => {
       try {
         const response = await axios.get(`https://api.github.com/gists/${process.env.REACT_APP_GIST_ID}`);
-
-        console.log(response, "RESPONSE")
-
+        console.log(JSON.parse(response.data.files[process.env.REACT_APP_GIST_SOLVE].content))
       } catch (error) {
         // 글로벌 에러 세팅
         console.error('Error fetching the Gist:', error);
@@ -102,6 +82,30 @@ const Solve = () => {
 
     fetchGist();
   }, []);
+
+  const updateGist = async () => {
+    console.log(JSON.stringify(data, null, 2))
+    try {
+      const response = await axios.patch(
+        `https://api.github.com/gists/${process.env.REACT_APP_GIST_ID}`,
+        {
+          files: {
+            [process.env.REACT_APP_GIST_SOLVE]: {
+        content: JSON.stringify(data, null, 2),
+      },
+    },
+    },
+      {
+        headers: {
+          Authorization: `token ${process.env.REACT_APP_GITHUB_TOKEN}`,
+        },
+      }
+    );
+      console.log('Gist updated:', response.data);
+    } catch (error) {
+      console.error('Error updating the Gist:', error);
+    }
+  };
 
 
   return (
