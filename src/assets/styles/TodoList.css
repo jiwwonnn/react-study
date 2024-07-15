@@ -1,0 +1,31 @@
+
+
+.top {
+  display: flex;
+  align-items: center;
+}
+
+.mid {
+  margin-top: 20px;
+  padding-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid grey;
+}
+
+.bot {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.botbot {
+  margin-top: 20px;
+}
+
+.checked {
+  color: #e0e0e0;
+  text-decoration: line-through;
+}
