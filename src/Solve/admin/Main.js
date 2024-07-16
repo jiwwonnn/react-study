@@ -3,19 +3,25 @@ import axios from "axios";
 
 const Main = () => {
 
-  const [data, setData] = useState({})
-  
+  const [data, setData] = useState({}) // gist state 저장
   const [edit, setEdit] = useState(false) // 수정 상태
+  const [add,setAdd] = useState(false) // 내용 추가 상태
 
-  const [add,setAdd] = useState(false)
+  const [newItem, setNewItem] = useState({
+    image: "",
+    word: "",
+    category: "",
+  }) // 새로운 image / word / category 객체임
 
+
+
+  axios.defaults.headers.common['Authorization'] = `token ${process.env.REACT_APP_GITHUB_TOKEN}`;
 
   // github gist
   useEffect(() => {
     const fetchGist = async () => {
       try {
         const response = await axios.get(`https://api.github.com/gists/${process.env.REACT_APP_GIST_ID}`);
-        console.log(JSON.parse(response.data.files[process.env.REACT_APP_GIST_SOLVE].content))
         setData(JSON.parse(response.data.files[process.env.REACT_APP_GIST_SOLVE].content))
       } catch (error) {
         // 글로벌 에러 세팅
@@ -25,10 +31,7 @@ const Main = () => {
 
     fetchGist();
   }, []);
-
-
-
-  const updateGist = async () => {
+  const updateGist = async (updateData) => {
     console.log(JSON.stringify(data, null, 2))
     try {
       const response = await axios.patch(
@@ -36,7 +39,7 @@ const Main = () => {
         {
           files: {
             [process.env.REACT_APP_GIST_SOLVE]: {
-              content: JSON.stringify(data, null, 2),
+              content: JSON.stringify(updateData, null, 2),
             },
           },
         },
@@ -53,16 +56,52 @@ const Main = () => {
   };
 
 
-  console.log(data, "DATA")
 
 
+  // 내용 추가 하기 버튼 누르면
   const handleAddList = () => {
     setAdd(true)
   }
 
+  // 닫기버튼 누르면
   const handleClose = () => {
     setAdd(false)
   }
+
+  // 추가하기 버튼 누르면
+  const handleAddItem = () => {
+
+    const newData = {
+      image: newItem.image,
+      word: newItem.word,
+      category: newItem.category
+    }
+
+    // clone 에 solveList[0] 에 기존에 데이터대신에 newData 를 추가를 해야함... 어떻게 해야할까 이거는
+
+
+    const newSolveList = data.solveList[0] && data.solveList ? [...data.solveList[0], newData] : [newData]
+
+    const newDataState = {
+      ...data,
+      solveList: [newSolveList]
+    }
+
+    setData(newDataState)
+
+    updateGist(newDataState);
+
+    setNewItem({
+      image: "",
+      word: "",
+      category:"",
+    })
+
+    setAdd(false)
+
+
+  }
+
 
   return (
     <div>
@@ -71,7 +110,7 @@ const Main = () => {
         <ul>
           {
             data.categories && data.categories.map((cate, idx) => (
-              <li>{cate}</li>
+              <li key={idx}>{cate}</li>
             ))
           }
 
@@ -87,17 +126,23 @@ const Main = () => {
             <div className='solve_list_inner'>
               <div>
                 <div className='solve_title'>이미지</div>
-                <input type="text" placeholder='이미지 url' />
+                <input type="text" placeholder='이미지 url' value={newItem.image}
+                  onChange={(e) => setNewItem({...newItem, image: e.target.value})}
+                />
               </div>
               <div>
                 <div className="solve_title">텍스트</div>
-                <input type="text" placeholder="텍스트" />
+                <input type="text" placeholder="텍스트" value={newItem.word}
+                  onChange={(e) => setNewItem({...newItem, word: e.target.value})}
+                />
               </div>
               <div>
                 <div className="solve_title">카테고리</div>
-                <input type="text" placeholder="카테고리" />
+                <input type="text" placeholder="카테고리" value={newItem.category}
+                 onChange={(e) => setNewItem({...newItem, category: e.target.value})}
+                />
               </div>
-              <button className='solve_edit'>추가하기</button>
+              <button className='solve_edit' onClick={handleAddItem}>추가하기</button>
 
             </div>
           </li>
@@ -135,7 +180,7 @@ const Main = () => {
 
       </ul>
 
-      
+
     </div>
   )
 }
