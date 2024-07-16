@@ -13,6 +13,12 @@ const Main = () => {
     category: "",
   }) // 새로운 image / word / category 객체임
 
+  const [newEditItem, setNewEditItem] = useState({
+    image: "",
+    word: "",
+    category: ""
+  })
+
 
 
   axios.defaults.headers.common['Authorization'] = `token ${process.env.REACT_APP_GITHUB_TOKEN}`;
@@ -63,7 +69,7 @@ const Main = () => {
     setAdd(true)
   }
 
-  // 닫기버튼 누르면
+  // 내용추가 닫기버튼 누르면
   const handleClose = () => {
     setAdd(false)
   }
@@ -77,15 +83,19 @@ const Main = () => {
       category: newItem.category
     }
 
-    // clone 에 solveList[0] 에 기존에 데이터대신에 newData 를 추가를 해야함... 어떻게 해야할까 이거는
-
 
     const newSolveList = data.solveList[0] && data.solveList ? [...data.solveList[0], newData] : [newData]
 
+    const newCategories = data.categories.includes(newItem.category) ? data.categories : [...data.categories, newItem.category]
+
+
     const newDataState = {
       ...data,
-      solveList: [newSolveList]
+      solveList: [newSolveList],
+      categories: newCategories,
     }
+
+    console.log(newCategories , "newCategories")
 
     setData(newDataState)
 
@@ -101,6 +111,54 @@ const Main = () => {
 
 
   }
+
+
+
+  // 리스트에서 삭제 버튼
+  const handleDelete = (id) => {
+    const bb = data.solveList[0].filter((item, idx) => idx !== id)
+
+
+    const deleteDataState = {
+      ...data,
+      solveList : [bb],
+    }
+
+    setData(deleteDataState)
+    updateGist(deleteDataState)
+
+
+    // const qwer = bb.map((item) => item.category.includes('amimals'))
+
+
+    const varr = bb.map((item) => console.log(item.category.includes(item.category), "item cate"))
+
+
+
+
+
+  }
+
+  // 리스트에서 수정하기 버튼
+  const handleEdit = (idx) => {
+
+    // edit 상태로 변경된다.
+    setEdit(true)
+
+    setNewEditItem({
+      image: data.solveList[0][idx].image,
+      word:data.solveList[0][idx].word,
+      category:data.solveList[0][idx].category
+    })
+  }
+
+  // 수정완료버튼을 누르면
+  // 내가 수정한 텍스트들의 내용으로 리스트에 내용이 변경된다.
+
+
+
+
+
 
 
   return (
@@ -149,32 +207,52 @@ const Main = () => {
         }
         {
           data.solveList && data.solveList[0].map((item, idx) => (
-            <li className='solve_li' key={idx}>
-              {/*삭제버튼은 21개부터 생김 20개일때는 닫기버튼이 안생겨야함*/}
-              <button className='solve_delete'>X</button>
-              <div className='solve_list_inner'>
-                <div className="solve_number">{idx+1}번</div>
-                <div>
-                  <div className='solve_title'>이미지</div>
-                  <div className="solve_img_wrap">
-                    <img src={item.image} alt="이미지"/>
+            edit ? (
+              <li className='solve_li' key={idx}>
+                <div className='solve_list_inner'>
+                  <div>
+                    <div className='solve_title'>이미지</div>
+                    <input type="text" placeholder='이미지 url' value={item.image}/>
                   </div>
-                  {/*<input type="text" placeholder='이미지 url' value={item.image}/>*/}
-                </div>
-                <div>
-                  <div className="solve_title">텍스트</div>
-                  <div>{item.word}</div>
-                  {/*<input type="text" placeholder="텍스트" value={item.word}/>*/}
-                </div>
-                <div>
-                  <div className="solve_title">카테고리</div>
-                  <div>{item.category}</div>
-                  {/*<input type="text" placeholder="카테고리" value={item.category}/>*/}
-                </div>
-                <button className='solve_edit'>수정하기</button>
+                  <div>
+                    <div className="solve_title">텍스트</div>
+                    <input type="text" placeholder="텍스트" value={item.word}/>
+                  </div>
+                  <div>
+                    <div className="solve_title">카테고리</div>
+                    <input type="text" placeholder="카테고리" value={item.category}/>
+                  </div>
+                  <button className='solve_edit' onClick={() => handleEdit}>수정완료</button>
+                  <button>수정 취소</button>
 
-              </div>
-            </li>
+                </div>
+              </li>
+            ) : (
+              <li className='solve_li' key={idx}>
+                {data.solveList[0].length > 20 && (
+                  <button className='solve_delete' onClick={() => handleDelete(idx)}>X</button>
+                )}
+                <div className='solve_list_inner'>
+                  <div className="solve_number">{idx+1}번</div>
+                  <div>
+                    <div className='solve_title'>이미지</div>
+                    <div className="solve_img_wrap">
+                      <img src={item.image} alt="이미지"/>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="solve_title">텍스트</div>
+                    <div>{item.word}</div>
+                  </div>
+                  <div>
+                    <div className="solve_title">카테고리</div>
+                    <div>{item.category}</div>
+                  </div>
+                  <button className='solve_edit' onClick={() => handleEdit(idx)}>수정하기</button>
+
+                </div>
+              </li>
+            )
           ))
         }
 
