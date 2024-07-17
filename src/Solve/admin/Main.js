@@ -6,6 +6,7 @@ const Main = () => {
   const [data, setData] = useState({}) // gist state 저장
   const [edit, setEdit] = useState(false) // 수정 상태
   const [add,setAdd] = useState(false) // 내용 추가 상태
+  const [filterCategory, setFilterCategory] = useState('')
 
   const [newItem, setNewItem] = useState({
     image: "",
@@ -62,8 +63,6 @@ const Main = () => {
   };
 
 
-
-
   // 내용 추가 하기 버튼 누르면
   const handleAddList = () => {
     setAdd(true)
@@ -86,17 +85,12 @@ const Main = () => {
 
     const newSolveList = data.solveList[0] && data.solveList ? [...data.solveList[0], newData] : [newData]
 
-    const newCategories = data.categories.includes(newItem.category) ? data.categories : [...data.categories, newItem.category]
 
 
     const newDataState = {
       ...data,
-      solveList: [newSolveList],
-      categories: newCategories,
+      solveList: [newSolveList]
     }
-
-    console.log(newCategories , "newCategories")
-
     setData(newDataState)
 
     updateGist(newDataState);
@@ -128,15 +122,6 @@ const Main = () => {
     updateGist(deleteDataState)
 
 
-    // const qwer = bb.map((item) => item.category.includes('amimals'))
-
-
-    const varr = bb.map((item) => console.log(item.category.includes(item.category), "item cate"))
-
-
-
-
-
   }
 
   // 리스트에서 수정하기 버튼
@@ -157,25 +142,40 @@ const Main = () => {
 
 
 
+  const handleCateItemList = (cate) => {
+    setFilterCategory(cate)
+  }
+
+
+
+  const filterCateList = filterCategory
+    ? (data.solveList && data.solveList[0] ? data.solveList[0].filter((item) => item.category === filterCategory) : [])
+    : (data.solveList && data.solveList[0] ? data.solveList[0] : []);
+
+  console.log(filterCateList , "카테고리랑 동일한 리스트를 찾아보기.")
+
+
 
 
 
 
   return (
-    <div>
+    <div className='admin_wrap'>
       <div>
-        <div>주제 리스트</div>
-        <ul>
+        <div>카테고리</div>
+        <ul className="cate_ul">
           {
-            data.categories && data.categories.map((cate, idx) => (
-              <li key={idx}>{cate}</li>
+            data.solveList && data.solveList[0] && [...new Set(data.solveList[0].map(item => item.category))].map((cate, idx) => (
+              <li key={idx} onClick={() => handleCateItemList(cate)}>{cate}</li>
             ))
           }
 
         </ul>
       </div>
 
-      <button onClick={handleAddList}>내용 추가하기</button>
+      <button
+        className="add_btn"
+        onClick={handleAddList}>내용 추가하기</button>
       <ul className='solve_ul'>
         {
           add &&
@@ -206,7 +206,7 @@ const Main = () => {
           </li>
         }
         {
-          data.solveList && data.solveList[0].map((item, idx) => (
+          filterCateList.map((item, idx) => (
             edit ? (
               <li className='solve_li' key={idx}>
                 <div className='solve_list_inner'>
@@ -229,7 +229,7 @@ const Main = () => {
               </li>
             ) : (
               <li className='solve_li' key={idx}>
-                {data.solveList[0].length > 20 && (
+                {filterCateList.length > 20 && (
                   <button className='solve_delete' onClick={() => handleDelete(idx)}>X</button>
                 )}
                 <div className='solve_list_inner'>

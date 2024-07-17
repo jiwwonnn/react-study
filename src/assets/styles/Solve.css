@@ -171,13 +171,44 @@ table {
 }
 
 
+
+
+.admin_wrap {
+  margin: 0 auto;
+  margin-top: 60px;
+  max-width: 1200px;
+}
+
+.cate_ul {
+  margin-top: 20px;
+  display: flex;
+  gap: 20px;
+}
+
+.cate_ul li {
+  background: black;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+
+.add_btn {
+  margin-top: 20px;
+  background: orange;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
 .solve_ul {
   display: grid;
   grid-template-columns: repeat(3,1fr);
   gap: 30px;
-  margin: 0 auto;
-  max-width: 1200px;
-  margin-top: 100px;
+  margin-top: 50px;
 }
 .solve_li {
   position:relative;
