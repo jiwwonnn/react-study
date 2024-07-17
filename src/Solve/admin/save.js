@@ -5,7 +5,11 @@ const Main = () => {
 
   const [data, setData] = useState({}) // gist state 저장
   const [edit, setEdit] = useState(false) // 수정 상태
+  const [editIndex, setEditIndex] = useState(null); // 수정 상태 인덱스
   const [add,setAdd] = useState(false) // 내용 추가 상태
+  const [selectedCategory, setSelectedCategory] = useState(""); // 선택된 카테고리 상태
+
+
 
   const [newItem, setNewItem] = useState({
     image: "",
@@ -85,17 +89,13 @@ const Main = () => {
 
 
     const newSolveList = data.solveList[0] && data.solveList ? [...data.solveList[0], newData] : [newData]
-
     const newCategories = data.categories.includes(newItem.category) ? data.categories : [...data.categories, newItem.category]
-
 
     const newDataState = {
       ...data,
       solveList: [newSolveList],
       categories: newCategories,
     }
-
-    console.log(newCategories , "newCategories")
 
     setData(newDataState)
 
@@ -116,34 +116,26 @@ const Main = () => {
 
   // 리스트에서 삭제 버튼
   const handleDelete = (id) => {
-    const bb = data.solveList[0].filter((item, idx) => idx !== id)
+    const updateSolveList = data.solveList[0].filter((item, idx) => idx !== id)
 
+    const updatedCategories = [...new Set(updateSolveList.map(item => item.category))];
 
     const deleteDataState = {
       ...data,
-      solveList : [bb],
-    }
+      solveList: [updateSolveList],
+      categories: updatedCategories,
+    };
 
-    setData(deleteDataState)
-    updateGist(deleteDataState)
-
-
-    // const qwer = bb.map((item) => item.category.includes('amimals'))
-
-
-    const varr = bb.map((item) => console.log(item.category.includes(item.category), "item cate"))
-
-
-
-
-
+    setData(deleteDataState);
+    updateGist(deleteDataState);
   }
+
+
 
   // 리스트에서 수정하기 버튼
   const handleEdit = (idx) => {
 
-    // edit 상태로 변경된다.
-    setEdit(true)
+    setEditIndex(idx);
 
     setNewEditItem({
       image: data.solveList[0][idx].image,
@@ -152,11 +144,42 @@ const Main = () => {
     })
   }
 
-  // 수정완료버튼을 누르면
-  // 내가 수정한 텍스트들의 내용으로 리스트에 내용이 변경된다.
+
+  // 수정 완료 버튼을 누르면
+  const handleEditItem = (idx) => {
+    const updatedSolveList = data.solveList[0].map((item, index) =>
+      index === idx ? newEditItem : item
+    );
+    const updatedCategories = [...new Set(updatedSolveList.map(item => item.category))];
+
+    const editDataState = {
+      ...data,
+      solveList: [updatedSolveList],
+      categories: updatedCategories,
+    };
+
+    setData(editDataState);
+    updateGist(editDataState);
+    setEditIndex(null);
+  };
 
 
 
+  // 수정 취소
+  const handleCancelEdit = () => {
+    setEditIndex(null)
+  }
+
+  // 카테고리 선택 시
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category);
+  };
+
+
+  // 선택된 카테고리에 따라 필터링된 항목
+  const filteredSolveList = selectedCategory
+    ? data.solveList?.[0]?.filter((item) => item.category === selectedCategory) || []
+    : data.solveList?.[0] || [];
 
 
 
@@ -166,11 +189,12 @@ const Main = () => {
       <div>
         <div>주제 리스트</div>
         <ul>
-          {
-            data.categories && data.categories.map((cate, idx) => (
-              <li key={idx}>{cate}</li>
-            ))
-          }
+          {data.categories &&
+          data.categories.map((cate, idx) => (
+            <li key={idx} onClick={() => handleCategorySelect(cate)}>
+              {cate}
+            </li>
+          ))}
 
         </ul>
       </div>
@@ -206,8 +230,8 @@ const Main = () => {
           </li>
         }
         {
-          data.solveList && data.solveList[0].map((item, idx) => (
-            edit ? (
+          filteredSolveList.map((item, idx) => (
+            editIndex === idx ? (
               <li className='solve_li' key={idx}>
                 <div className='solve_list_inner'>
                   <div>
@@ -222,14 +246,14 @@ const Main = () => {
                     <div className="solve_title">카테고리</div>
                     <input type="text" placeholder="카테고리" value={item.category}/>
                   </div>
-                  <button className='solve_edit' onClick={() => handleEdit}>수정완료</button>
-                  <button>수정 취소</button>
+                  <button className='solve_edit' onClick={() => handleEditItem(idx)}>수정완료</button>
+                  <button onClick={handleCancelEdit}>수정 취소</button>
 
                 </div>
               </li>
             ) : (
               <li className='solve_li' key={idx}>
-                {data.solveList[0].length > 20 && (
+                {filteredSolveList.length > 20 && (
                   <button className='solve_delete' onClick={() => handleDelete(idx)}>X</button>
                 )}
                 <div className='solve_list_inner'>
