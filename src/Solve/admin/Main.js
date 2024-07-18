@@ -8,6 +8,8 @@ const Main = () => {
   const [add,setAdd] = useState(false) // 내용 추가 상태
   const [filterCategory, setFilterCategory] = useState('')
 
+  const [editIndex, setEditIndex] = useState(null)
+
   const [newItem, setNewItem] = useState({
     image: "",
     word: "",
@@ -128,7 +130,7 @@ const Main = () => {
   const handleEdit = (idx) => {
 
     // edit 상태로 변경된다.
-    setEdit(true)
+    setEditIndex(idx)
 
     setNewEditItem({
       image: data.solveList[0][idx].image,
@@ -140,6 +142,11 @@ const Main = () => {
   // 수정완료버튼을 누르면
   // 내가 수정한 텍스트들의 내용으로 리스트에 내용이 변경된다.
 
+
+
+  const handleEditCancel = () => {
+    setEditIndex(null)
+  }
 
 
   const handleCateItemList = (cate) => {
@@ -209,7 +216,7 @@ const Main = () => {
         }
         {
           filterCateList.map((item, idx) => (
-            edit ? (
+            editIndex === idx ? (
               <li className='solve_li' key={idx}>
                 <div className='solve_list_inner'>
                   <div>
@@ -225,15 +232,16 @@ const Main = () => {
                     <input type="text" placeholder="카테고리" value={item.category}/>
                   </div>
                   <button className='solve_edit' onClick={() => handleEdit}>수정완료</button>
-                  <button>수정 취소</button>
+                  <button onClick={handleEditCancel}>수정 취소</button>
 
                 </div>
               </li>
             ) : (
               <li className='solve_li' key={idx}>
-                {filterCateList.length > 20 && (
-                  <button className='solve_delete' onClick={() => handleDelete(idx)}>X</button>
-                )}
+                {/*{filterCateList.length > 20 && (*/}
+                {/*  <button className='solve_delete' onClick={() => handleDelete(idx)}>X</button>*/}
+                {/*)}*/}
+                <button className='solve_delete' onClick={() => handleDelete(idx)}>X</button>
                 <div className='solve_list_inner'>
                   <div className="solve_number">{idx+1}번</div>
                   <div>
