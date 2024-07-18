@@ -21,6 +21,21 @@ import cheetah from "../assets/images/cheetah.png"
 
 
 
+// export const CategoryList = [
+//   { key: "animals",value: "동물" },
+//
+// ]
+//
+// {
+//   "image": "https://cdn.sports.hankooki.com/news/photo/202302/6820088_1009054_394.jpg",
+//   "word": "나나",
+//   "category": {
+//     "key": "peoples",
+//     "ko": "사람",
+//     "en": "",
+//     "jp": ""
+// }
+// },
 
 
 export const solveList = [

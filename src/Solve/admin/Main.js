@@ -170,16 +170,34 @@ const Main = () => {
     <div className='admin_wrap'>
       <div>
         <div>카테고리</div>
-        <ul className="cate_ul">
-          {/*전체 li가 저 map 돌리는함수 나오는 속도랑 비슷하게는 못하나 ?*/}
-          <li onClick={() => handleCateItemList("")}>전체</li>
-          {
-            data.solveList && data.solveList[0] && [...new Set(data.solveList[0].map(item => item.category))].map((cate, idx) => (
-              <li key={idx} onClick={() => handleCateItemList(cate)}>{cate}</li>
-            ))
-          }
+        {/*<ul className="cate_ul">*/}
+        {/*  /!*전체 li가 저 map 돌리는함수 나오는 속도랑 비슷하게는 못하나 ?*!/*/}
+        {/*  <li onClick={() => handleCateItemList("")}>전체</li>*/}
+        {/*  {*/}
+        {/*    data.solveList && data.solveList[0] && [...new Set(data.solveList[0].map(item => item.category))].map((cate, idx) => (*/}
+        {/*      <li key={idx} onClick={() => handleCateItemList(cate)}>{cate}</li>*/}
+        {/*    ))*/}
+        {/*  }*/}
 
-        </ul>
+        {/*</ul>*/}
+
+
+        {
+          data.solveList &&
+          <ul className="cate_ul">
+            {/*전체 li가 저 map 돌리는함수 나오는 속도랑 비슷하게는 못하나 ?*/}
+            <li onClick={() => handleCateItemList("")}>전체</li>
+            {
+              data.solveList[0] && [...new Set(data.solveList[0].map(item => item.category))].map((cate, idx) => (
+                <li key={idx} onClick={() => handleCateItemList(cate)}>{cate}</li>
+              ))
+            }
+
+          </ul>
+        }
+
+
+
       </div>
 
       <button
