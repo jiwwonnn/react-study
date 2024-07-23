@@ -14,12 +14,14 @@ const Main = () => {
     image: "",
     word: "",
     category: "",
+    ko: "",
   }) // 새로운 image / word / category 객체임
 
   const [newEditItem, setNewEditItem] = useState({
     image: "",
     word: "",
-    category: ""
+    category: "",
+    ko:"",
   })
 
 
@@ -81,7 +83,8 @@ const Main = () => {
     const newData = {
       image: newItem.image,
       word: newItem.word,
-      category: newItem.category
+      category: newItem.category,
+      ko: newItem.ko,
     }
 
 
@@ -101,6 +104,7 @@ const Main = () => {
       image: "",
       word: "",
       category:"",
+      ko: ""
     })
 
     setAdd(false)
@@ -135,12 +139,30 @@ const Main = () => {
     setNewEditItem({
       image: data.solveList[0][idx].image,
       word:data.solveList[0][idx].word,
-      category:data.solveList[0][idx].category
+      category:data.solveList[0][idx].category,
+      ko: data.solveList[0][idx].ko,
     })
   }
 
   // 수정완료버튼을 누르면
   // 내가 수정한 텍스트들의 내용으로 리스트에 내용이 변경된다.
+
+  //수정완료버튼
+  const handleEditSubmit = () => {
+    const updateList = data.solveList[0].map((item, idx) => idx === editIndex ? newEditItem : item)
+
+    const updateDataState = {
+      ...data,
+      solveList: [updateList]
+    }
+
+    setData(updateDataState)
+    updateGist(updateDataState)
+    setEditIndex(null)
+
+  }
+
+
 
 
 
@@ -185,8 +207,7 @@ const Main = () => {
         {
           data.solveList &&
           <ul className="cate_ul">
-            {/*전체 li가 저 map 돌리는함수 나오는 속도랑 비슷하게는 못하나 ?*/}
-            <li onClick={() => handleCateItemList("")}>전체</li>
+            <li onClick={() => handleCateItemList("")}>ALL</li>
             {
               data.solveList[0] && [...new Set(data.solveList[0].map(item => item.category))].map((cate, idx) => (
                 <li key={idx} onClick={() => handleCateItemList(cate)}>{cate}</li>
@@ -227,6 +248,12 @@ const Main = () => {
                        onChange={(e) => setNewItem({...newItem, category: e.target.value})}
                 />
               </div>
+              <div>
+                <div className="solve_title">한글</div>
+                <input type="text" placeholder="한글" value={newItem.ko}
+                       onChange={(e) => setNewItem({...newItem, ko: e.target.value})}
+                />
+              </div>
               <button className='solve_edit' onClick={handleAddItem}>추가하기</button>
 
             </div>
@@ -239,17 +266,29 @@ const Main = () => {
                 <div className='solve_list_inner'>
                   <div>
                     <div className='solve_title'>이미지</div>
-                    <input type="text" placeholder='이미지 url' value={item.image}/>
+                    <input type="text" placeholder='이미지 url' value={newEditItem.image}
+                        onChange={(e) => setNewEditItem({ ...newEditItem, image:e.target.value})}
+                    />
                   </div>
                   <div>
                     <div className="solve_title">텍스트</div>
-                    <input type="text" placeholder="텍스트" value={item.word}/>
+                    <input type="text" placeholder="텍스트" value={newEditItem.word}
+                       onChange={(e) => setNewEditItem({ ...newEditItem, word:e.target.value})}
+                    />
                   </div>
                   <div>
                     <div className="solve_title">카테고리</div>
-                    <input type="text" placeholder="카테고리" value={item.category}/>
+                    <input type="text" placeholder="카테고리" value={newEditItem.category}
+                     onChange={(e) => setNewEditItem({ ...newEditItem, category:e.target.value})}
+                    />
                   </div>
-                  <button className='solve_edit' onClick={() => handleEdit}>수정완료</button>
+                  <div>
+                    <div className="solve_title">한글</div>
+                    <input type="text" placeholder="한글" value={newEditItem.ko}
+                           onChange={(e) => setNewEditItem({ ...newEditItem, ko:e.target.value})}
+                    />
+                  </div>
+                  <button className='solve_edit' onClick={handleEditSubmit}>수정완료</button>
                   <button onClick={handleEditCancel}>수정 취소</button>
 
                 </div>

@@ -14,21 +14,16 @@ const Solve = () => {
   const [popup, setPopup] = useState(false); // 팝업 상태
   const [popupMessage, setPopupMessage] = useState(''); // 팝업 텍스트
   const [shuffleAnswerList, setShuffleAnswerList] = useState([]); // 정답 리스트
-
+  const [selectedCategory, setSelectedCategory] = useState(''); // 선택된 카테고리
+  const [buttonList, setButtonList] = useState([]);
   const currentQuestion = questionList[currentNumber]; // 현재 질문
 
-  useEffect(() => {
-    if (currentQuestion) {
-      const clone = [...solveList[0]];
-      const filteredList = clone.filter(item => item.word !== currentQuestion.word);
-      const shuffledList = filteredList.sort(() => 0.5 - Math.random()).slice(0, 3).map(item => item.word);
-      const answerList = [...shuffledList, currentQuestion.word].sort(() => 0.5 - Math.random());
-      setShuffleAnswerList(answerList);
-    }
-  }, [currentNumber, questionList]);
 
-  const startQuiz = () => {
-    const randomQuestion = [...solveList[0]].sort(() => 0.5 - Math.random());
+
+  const startQuiz = (category) => {
+    setSelectedCategory(category);
+
+    const randomQuestion = data.filter(item => item.category === category).sort(() => 0.5 - Math.random());
     setQuestionList(randomQuestion);
     setStart(false);
     setScore(0);
@@ -63,9 +58,21 @@ const Solve = () => {
     }, 800);
   };
 
+  const handleSetButtonList = () => {
+    const uniqueNames = new Map();
+    data.forEach(item => {
+      if (!uniqueNames.has(item.category)) {
+        uniqueNames.set(item.category, { category: item.category, ko: item.ko });
+      }
+    });
+    const result = Array.from(uniqueNames.values());
+    setButtonList(result);
+  }
 
 
-
+  useEffect(() => {
+    (data.length > 0) && handleSetButtonList();
+  }, [data])
 
 
   // github gist
@@ -73,7 +80,10 @@ const Solve = () => {
     const fetchGist = async () => {
       try {
         const response = await axios.get(`https://api.github.com/gists/${process.env.REACT_APP_GIST_ID}`);
-        console.log(JSON.parse(response.data.files[process.env.REACT_APP_GIST_SOLVE].content))
+        const data = JSON.parse(response.data.files[process.env.REACT_APP_GIST_SOLVE].content);
+        if(data.solveList?.length > 0) {
+          setData(data.solveList[0]);
+        }
       } catch (error) {
         // 글로벌 에러 세팅
         console.error('Error fetching the Gist:', error);
@@ -82,6 +92,17 @@ const Solve = () => {
 
     fetchGist();
   }, []);
+
+
+  useEffect(() => {
+    if (currentQuestion) {
+      const clone = [...questionList];
+      const filteredList = clone.filter(item => item.word !== currentQuestion.word);
+      const shuffledList = filteredList.sort(() => 0.5 - Math.random()).slice(0, 3).map(item => item.word);
+      const answerList = [...shuffledList, currentQuestion.word].sort(() => 0.5 - Math.random());
+      setShuffleAnswerList(answerList);
+    }
+  }, [currentNumber, questionList]);
 
   const updateGist = async () => {
     console.log(JSON.stringify(data, null, 2))
@@ -108,6 +129,12 @@ const Solve = () => {
   };
 
 
+
+  // const dataSolveList = data.solveList ? data.solveList[0]: null
+  // ko 속성의 값만 추출하고 중복 제거
+  // const uniqueKoValues = [...new Set(dataSolveList && dataSolveList.map(item => item && item))];
+
+
   return (
     <div className='wrap'>
       {result ? (
@@ -121,8 +148,18 @@ const Solve = () => {
         <div>
           {start ? (
             <div className='start_quiz'>
-              <button onClick={startQuiz}>동물 퀴즈 풀기</button>
+              <div className="button_list">
+                {
+                  // uniqueKoValues && uniqueKoValues.map((ko, idx) => (
+                  //   ko && <button key={idx} onClick={() => startQuiz(ko)}>{ko} 퀴즈 풀기</button>
+                  // ))
+                  buttonList?.map((item, idx) => (
+                    item && <button key={idx} onClick={() => startQuiz(item.category)}>{item.ko} 퀴즈 풀기</button>
+                  ))
+                }
+              </div>
             </div>
+
           ) : (
             <div className='content'>
               <div className='content_inner'>

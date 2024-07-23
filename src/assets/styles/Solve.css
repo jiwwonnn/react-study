@@ -60,6 +60,12 @@ table {
   justify-content: center;
 }
 
+.start_quiz .button_list {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 16px;
+}
+
 .start_quiz button {
   border: 0;
   width: 150px;
