@@ -130,9 +130,9 @@ const Solve = () => {
 
 
 
-  // const dataSolveList = data.solveList ? data.solveList[0]: null
-  // ko 속성의 값만 추출하고 중복 제거
-  // const uniqueKoValues = [...new Set(dataSolveList && dataSolveList.map(item => item && item))];
+
+
+  console.log("DATA", data)
 
 
   return (
