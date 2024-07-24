@@ -58,15 +58,33 @@ const Solve = () => {
     }, 800);
   };
 
+
+  // * 각 카테고리의 수 ( 추가한 리스트의 개수) 가 20개 이상인 경우만 메인화면에
+  // 카테고리 버튼으로 추가가 되며 문제를 나타나게 해야한다.
+
   const handleSetButtonList = () => {
-    const uniqueNames = new Map();
+    const categoryCount = {};
+
+    // 각 카테고리의 항목 수를 셈
     data.forEach(item => {
-      if (!uniqueNames.has(item.category)) {
-        uniqueNames.set(item.category, { category: item.category, ko: item.ko });
+      if (categoryCount[item.category]) {
+        categoryCount[item.category]++;
+      } else {
+        categoryCount[item.category] = 1;
       }
     });
-    const result = Array.from(uniqueNames.values());
-    setButtonList(result);
+
+    // 항목이 20개 이상인 카테고리만 필터링
+    const filteredCategories = data.filter(item => categoryCount[item.category] >= 20);
+
+
+
+    // 중복되는 카테고리 제거
+    const uniqueCategories = [...new Map(filteredCategories.map(item => [item.category, item])).values()];
+
+    // buttonList 상태 업데이트
+    setButtonList(uniqueCategories);
+    
   }
 
 

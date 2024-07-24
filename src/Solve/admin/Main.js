@@ -115,8 +115,8 @@ const Main = () => {
 
 
   // 리스트에서 삭제 버튼
-  const handleDelete = (id) => {
-    const bb = data.solveList[0].filter((item, idx) => idx !== id)
+  const handleDelete = (item) => {
+    const bb = data.solveList[0].filter((i) => i !== item)
 
 
     const deleteDataState = {
@@ -180,10 +180,6 @@ const Main = () => {
   const filterCateList = filterCategory
     ? (data.solveList && data.solveList[0] ? data.solveList[0].filter((item) => item.category === filterCategory) : [])
     : (data.solveList && data.solveList[0] ? data.solveList[0] : []);
-
-  console.log(filterCateList , "카테고리랑 동일한 리스트를 찾아보기.")
-
-
 
 
 
@@ -282,7 +278,7 @@ const Main = () => {
               </li>
             ) : (
               <li className='solve_li' key={idx}>
-                <button className='solve_delete' onClick={() => handleDelete(idx)}>X</button>
+                <button className='solve_delete' onClick={() => handleDelete(item)}>X</button>
                 <div className='solve_list_inner'>
                   <div className="solve_number">{idx+1}번</div>
                   <div>
