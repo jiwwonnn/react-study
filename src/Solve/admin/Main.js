@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
+import {Link} from "react-router-dom";
 
 const Main = () => {
 
@@ -219,6 +220,9 @@ const Main = () => {
 
   return (
     <div className='admin_wrap'>
+
+      <Link to={'/Solve/Admin/Statistics'}>문제 통계</Link>
+
       <div>
         {
           data.solveList &&
