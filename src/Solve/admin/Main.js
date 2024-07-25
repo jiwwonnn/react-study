@@ -3,12 +3,17 @@ import axios from "axios";
 
 const Main = () => {
 
-  const [data, setData] = useState({}) // gist state 저장
+  const [data, setData] = useState({solveList: []}) // gist state 저장
   const [edit, setEdit] = useState(false) // 수정 상태
   const [add,setAdd] = useState(false) // 내용 추가 상태
   const [filterCategory, setFilterCategory] = useState('')
-
   const [editIndex, setEditIndex] = useState(null)
+
+  const [page, setPage] = useState(1) // 현재 페이지 상태
+  const [totalPage, setTotalPage] = useState('') // 총 페이지 수
+  const itemPerPage = 10
+
+
 
   const [newItem, setNewItem] = useState({
     image: "",
@@ -25,6 +30,11 @@ const Main = () => {
   })
 
 
+  const currentPage = Math.ceil((page / 5)) // 화면에 보여질 페이지의 개수
+
+  const firstGroup = 5 * (currentPage-1); // 화면에 보여질 페이지의 첫번째 번호 1, 6, 11 ...
+  const totalPageCount = Math.ceil(totalPage / itemPerPage); // 전체 페이지 개수
+
 
   axios.defaults.headers.common['Authorization'] = `token ${process.env.REACT_APP_GITHUB_TOKEN}`;
 
@@ -32,8 +42,16 @@ const Main = () => {
   useEffect(() => {
     const fetchGist = async () => {
       try {
+
+        // 해당 부분 헷갈림
         const response = await axios.get(`https://api.github.com/gists/${process.env.REACT_APP_GIST_ID}`);
-        setData(JSON.parse(response.data.files[process.env.REACT_APP_GIST_SOLVE].content))
+        const responseData = (JSON.parse(response.data.files[process.env.REACT_APP_GIST_SOLVE].content))
+
+        setData(responseData)
+        setTotalPage(responseData?.solveList[0]?.length)
+
+
+
       } catch (error) {
         // 글로벌 에러 세팅
         console.error('Error fetching the Gist:', error);
@@ -42,6 +60,9 @@ const Main = () => {
 
     fetchGist();
   }, []);
+
+
+
   const updateGist = async (updateData) => {
     console.log(JSON.stringify(data, null, 2))
     try {
@@ -175,13 +196,22 @@ const Main = () => {
     setFilterCategory(cate)
   }
 
-
-
   const filterCateList = filterCategory
     ? (data.solveList && data.solveList[0] ? data.solveList[0].filter((item) => item.category === filterCategory) : [])
     : (data.solveList && data.solveList[0] ? data.solveList[0] : []);
 
+  const paginatedList = filterCateList.slice((page - 1) * itemPerPage, page * itemPerPage);
 
+
+
+  useEffect(() => {
+    // 페이지와 카테고리가 변경될 때마다 totalPage 업데이트
+    const filterCateList = filterCategory
+      ? (data.solveList && data.solveList[0] ? data.solveList[0].filter((item) => item.category === filterCategory) : [])
+      : (data.solveList && data.solveList[0] ? data.solveList[0] : []);
+
+    setTotalPage(filterCateList.length);
+  }, [filterCategory, data]);
 
 
   return (
@@ -243,7 +273,7 @@ const Main = () => {
           </li>
         }
         {
-          filterCateList.map((item, idx) => (
+          paginatedList.map((item, idx) => (
             editIndex === idx ? (
               <li className='solve_li' key={idx}>
                 <div className='solve_list_inner'>
@@ -304,6 +334,43 @@ const Main = () => {
         }
 
       </ul>
+
+      {totalPage > 0 && (
+        <div className='pagination' >
+          <button onClick={() => setPage(1)}>처음</button>
+          <button
+            onClick={() => {
+              if (page > 1) {
+                setPage(page - 1);
+              }
+            }}
+          >
+            이전
+          </button>
+          {Array.from(
+            { length: Math.min(5, totalPageCount - (currentPage - 1) * 5) },
+            (v, i) => (
+              <button
+                key={i}
+                className={(firstGroup + i + 1) === page ? "active" : ""}
+                onClick={() => setPage(firstGroup + i + 1)}
+              >
+                {firstGroup + i + 1}
+              </button>
+            )
+          )}
+          <button
+            onClick={() => {
+              if (page < totalPageCount) {
+                setPage(page + 1);
+              }
+            }}
+          >
+            다음
+          </button>
+          <button onClick={() => setPage(totalPageCount)}>끝</button>
+        </div>
+      )}
 
 
     </div>

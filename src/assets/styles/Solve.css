@@ -214,7 +214,7 @@ table {
   display: grid;
   grid-template-columns: repeat(3,1fr);
   gap: 30px;
-  margin-top: 50px;
+  margin: 50px 0;
 }
 .solve_li {
   position:relative;
@@ -251,4 +251,26 @@ table {
 .solve_title {
   font-size: 20px;
   margin: 10px 0;
+}
+
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 50px;
+}
+
+.pagination button {
+  padding: 10px 20px;
+  background: black;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background: orange;
 }
