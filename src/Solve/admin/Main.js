@@ -194,6 +194,7 @@ const Main = () => {
 
   const handleCateItemList = (cate) => {
     setFilterCategory(cate)
+    setPage(1)
   }
 
   const filterCateList = filterCategory
@@ -201,6 +202,8 @@ const Main = () => {
     : (data.solveList && data.solveList[0] ? data.solveList[0] : []);
 
   const paginatedList = filterCateList.slice((page - 1) * itemPerPage, page * itemPerPage);
+
+  console.log(paginatedList, "paginatedList")
 
 
 
@@ -310,7 +313,7 @@ const Main = () => {
               <li className='solve_li' key={idx}>
                 <button className='solve_delete' onClick={() => handleDelete(item)}>X</button>
                 <div className='solve_list_inner'>
-                  <div className="solve_number">{idx+1}번</div>
+                  <div className="solve_number">{(page - 1) * itemPerPage + idx + 1}번</div>
                   <div>
                     <div className='solve_title'>이미지</div>
                     <div className="solve_img_wrap">
