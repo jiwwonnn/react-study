@@ -220,9 +220,6 @@ const Main = () => {
 
   return (
     <div className='admin_wrap'>
-
-      <Link to={'/Solve/Admin/Statistics'}>문제 통계</Link>
-
       <div>
         {
           data.solveList &&

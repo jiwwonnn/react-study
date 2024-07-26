@@ -4,7 +4,6 @@ import Quiz from "./Quiz/Quiz";
 import TodoList from "./TodoList/TodoList";
 import Solve from "./Solve/Solve";
 import Main from "./Solve/admin/Main";
-import Statistics from "./Solve/admin/statistics";
 
 const App = () => {
   return (
@@ -14,7 +13,6 @@ const App = () => {
       <Route path='/Quiz' element={<Quiz />}></Route>
       <Route path='/Solve' element={<Solve />}></Route>
       <Route path='/Solve/Admin' element={<Main />}></Route>
-      <Route path='/Solve/Admin/Statistics' element={<Statistics />}></Route>
     </Routes>
   )
 }
