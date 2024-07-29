@@ -17,6 +17,9 @@ const Home = () => {
         <li>
           <Link to='/HeaderDropdown'>헤더 드롭다운</Link>
         </li>
+        <li>
+          <Link to='/Tab'>탭 스타일</Link>
+        </li>
       </ul>
     </div>
   )

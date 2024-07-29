@@ -5,6 +5,7 @@ import TodoList from "./TodoList/TodoList";
 import Solve from "./Solve/Solve";
 import Main from "./Solve/admin/Main";
 import HeaderDropdown from "./HeaderDropdown/HeaderDropdown";
+import Tab from "./Tab/Tab";
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
       <Route path='/Solve' element={<Solve />}></Route>
       <Route path='/Solve/Admin' element={<Main />}></Route>
       <Route path='/HeaderDropdown' element={<HeaderDropdown />}></Route>
+      <Route path='/Tab' element={<Tab />}></Route>
     </Routes>
   )
 }

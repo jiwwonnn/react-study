@@ -1,0 +1,79 @@
+/*ver 1*/
+
+
+.tab {
+  width: 200px;
+  margin: 100px;
+}
+
+.tab_item {
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap to the next line */
+}
+
+.tab_li {
+  width: 50px;
+  border: 1px solid black;
+  border-right: none;
+  border-bottom: none;
+  box-sizing: border-box;
+}
+
+/* Add borders selectively */
+.tab_li:nth-child(4n) {
+  border-right: 1px solid black;
+}
+
+.tab_li:nth-last-child(-n + 4) {
+  border-bottom: 1px solid black;
+}
+
+.tab_li div {
+  border: 1px solid transparent;
+}
+.tab_li div:hover {
+  border: 1px solid red;
+}
+
+
+/*ver 2*/
+
+/*.tab {*/
+/*  width: 200px;*/
+/*  margin: 30px;*/
+/*}*/
+
+/*.tab_item {*/
+/*  display: flex;*/
+/*  flex-wrap: wrap; !* Allow items to wrap to the next line *!*/
+/*}*/
+
+/*.tab_li {*/
+/*  position: relative;*/
+/*  width: 50px;*/
+/*  border: 1px solid black;*/
+/*  border-right: none;*/
+/*  border-left: none;*/
+/*  border-bottom: none;*/
+/*  box-sizing: border-box;*/
+/*}*/
+
+/*.tab_li:after {*/
+/*  content:"";*/
+/*  display: block;*/
+/*  height: 100%;*/
+/*  width: 1px;*/
+/*  background: orange;*/
+/*  position:absolute;*/
+/*  right: 0;*/
+/*  top: 0;*/
+/*}*/
+
+
+/*.tab_li:hover {*/
+/*  border :1px solid red;*/
+/*}*/
+
+/*.tab_li:after:hover {*/
+/*  content: none;*/
+/*}*/
