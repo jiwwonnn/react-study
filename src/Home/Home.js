@@ -14,6 +14,9 @@ const Home = () => {
         <li>
           <Link to='/Solve'>문제 맞추기</Link>
         </li>
+        <li>
+          <Link to='/HeaderDropdown'>헤더 드롭다운</Link>
+        </li>
       </ul>
     </div>
   )
