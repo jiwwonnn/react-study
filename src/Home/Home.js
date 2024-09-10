@@ -20,6 +20,9 @@ const Home = () => {
         <li>
           <Link to='/Tab'>탭 스타일</Link>
         </li>
+        <li>
+          <Link to='/Mbti'>Mbti</Link>
+        </li>
       </ul>
     </div>
   )

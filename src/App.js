@@ -6,6 +6,8 @@ import Solve from "./Solve/Solve";
 import Main from "./Solve/admin/Main";
 import HeaderDropdown from "./HeaderDropdown/HeaderDropdown";
 import Tab from "./Tab/Tab";
+import Mbti from "./Mbti/Mbti";
+import MbtiResult from "./Mbti/MbtiResult";
 
 const App = () => {
   return (
@@ -17,6 +19,8 @@ const App = () => {
       <Route path='/Solve/Admin' element={<Main />}></Route>
       <Route path='/HeaderDropdown' element={<HeaderDropdown />}></Route>
       <Route path='/Tab' element={<Tab />}></Route>
+      <Route path='/Mbti' element={<Mbti />}></Route>
+      <Route path='/Mbti/result' element={<MbtiResult />}></Route>
     </Routes>
   )
 }
